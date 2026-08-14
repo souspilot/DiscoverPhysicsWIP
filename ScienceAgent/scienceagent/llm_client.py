@@ -31,7 +31,7 @@ from typing import Optional
 # upstream (Together / OpenRouter / HF / etc.) from hanging the whole run.
 # 5 minutes accommodates reasoning models (gpt-5.4-pro, DeepSeek-R1, etc.)
 # that occasionally need extended thinking time on a fresh world prompt.
-HTTP_TIMEOUT_S = 300.0
+HTTP_TIMEOUT_S = 1800.0
 
 
 def complete(
@@ -164,7 +164,8 @@ def _groq_complete(model, messages, system, max_tokens):
         messages=full_messages,
         max_tokens=max_tokens,
     )
-    return response.choices[0].message.content
+    msg = response.choices[0].message
+    return msg.content or getattr(msg, "reasoning_content", None) or ""
 
 
 # -------------
@@ -266,4 +267,5 @@ def _openai_complete(model, messages, system, max_tokens):
         messages=full_messages,
         max_tokens=max_tokens,
     )
-    return response.choices[0].message.content
+    msg = response.choices[0].message
+    return msg.content or getattr(msg, "reasoning_content", None) or ""

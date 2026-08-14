@@ -1,0 +1,61 @@
+==========================================
+YAML benchmark: qwen_local_run
+  output : /scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/results/yml_bench/qwen_local_run
+  models : qwen-local
+  worlds : gravity yukawa fractional dark_matter three_species ether hubble coulomb_easy extra_dimensions circle oscillator
+  seeds  : 0
+  critic : off (model: qwen-local)
+  judge  : qwen-local
+  rounds : 8
+  noise  : σ/σ_signal (frac of per-world sqrt(Var GT)) = 0.075
+  random : off
+  no_mse : off
+  total trials : 11
+==========================================
+[  1/ 11] model=qwen-local world=gravity noise=0.075 (σ=0.155216) seed=0
+    done in 487s
+[  2/ 11] model=qwen-local world=yukawa noise=0.075 (σ=0.178698) seed=0
+    done in 692s
+[  3/ 11] model=qwen-local world=fractional noise=0.075 (σ=0.179390) seed=0
+    done in 424s
+[  4/ 11] model=qwen-local world=dark_matter noise=0.075 (σ=0.596724) seed=0
+    FAILED (rc=1) — see /scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/results/yml_bench/qwen_local_run/qwen-local/dark_matter_seed0.stdout.log
+[  5/ 11] model=qwen-local world=three_species noise=0.075 (σ=0.401912) seed=0
+    FAILED (rc=1) — see /scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/results/yml_bench/qwen_local_run/qwen-local/three_species_seed0.stdout.log
+[  6/ 11] model=qwen-local world=ether noise=0.075 (σ=0.345806) seed=0
+    FAILED (rc=1) — see /scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/results/yml_bench/qwen_local_run/qwen-local/ether_seed0.stdout.log
+[  7/ 11] model=qwen-local world=hubble noise=0.075 (σ=0.481340) seed=0
+    done in 984s
+[  8/ 11] model=qwen-local world=coulomb_easy noise=0.075 (σ=0.154507) seed=0
+    done in 633s
+[  9/ 11] model=qwen-local world=extra_dimensions noise=0.075 (σ=0.154580) seed=0
+    done in 816s
+[ 10/ 11] model=qwen-local world=circle noise=0.075 (σ=0.192620) seed=0
+    FAILED (rc=1) — see /scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/results/yml_bench/qwen_local_run/qwen-local/circle_seed0.stdout.log
+[ 11/ 11] model=qwen-local world=oscillator noise=0.075 (σ=0.188726) seed=0
+    done in 524s
+==========================================
+Finished 11 trials in 6401s
+==========================================
+Wrote /scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/results/yml_bench/qwen_local_run/run.sh
+Executing /scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/results/yml_bench/qwen_local_run/run.sh ...
+
+
+summary written to /scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/results/yml_bench/qwen_local_run/summary.txt
+--- summary.txt ---
+Benchmark summary  (qwen_local_run)
+====================================================================================================================
+model                                              world             n    expl_score [95% CI]      norm_MSE [95% CI]
+--------------------------------------------------------------------------------------------------------------------
+qwen-local                                         coulomb_easy      1                  0.500                  1.273
+qwen-local                                         extra_dimensions   1                  0.200                  0.002
+qwen-local                                         fractional        1                  0.500                  0.818
+qwen-local                                         gravity           1                  0.700                  0.096
+qwen-local                                         hubble            1                  0.200                  4.437
+qwen-local                                         oscillator        1                  0.100                  0.104
+qwen-local                                         yukawa            1                  0.100           13179087.298
+--------------------------------------------------------------------------------------------------------------------
+expl_score: explanation judge score in [0, 1], higher is better. Arithmetic mean.
+norm_MSE: geometric mean of mean_pos_error / Var(GT_world) across seeds (values < 1e-14 dropped); lower is better. Per-world variances are hardcoded in run_benchmark.py.
+Format: point estimate [2.5%, 97.5%] from 5000 bootstrap resamples (seed=0). n=1 → no CI. 'n/a' = no successful runs.
+

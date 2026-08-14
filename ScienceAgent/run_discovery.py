@@ -205,9 +205,9 @@ def main():
     # Reasoning models need more output tokens for chain-of-thought + XML tags
     max_tokens = args.max_tokens
     if max_tokens is None:
-        _reasoning_prefixes = ("azure/gpt-5.4-pro", "o1", "o3")
+        _reasoning_prefixes = ("azure/gpt-5.4-pro", "o1", "o3", "qwen")
         if any(args.model.startswith(p) for p in _reasoning_prefixes):
-            max_tokens = 16384
+            max_tokens = 12000
         else:
             max_tokens = 8192
 

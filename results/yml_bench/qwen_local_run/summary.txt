@@ -1,0 +1,15 @@
+Benchmark summary  (qwen_local_run)
+====================================================================================================================
+model                                              world             n    expl_score [95% CI]      norm_MSE [95% CI]
+--------------------------------------------------------------------------------------------------------------------
+qwen-local                                         coulomb_easy      1                  0.500                  1.273
+qwen-local                                         extra_dimensions   1                  0.200                  0.002
+qwen-local                                         fractional        1                  0.500                  0.818
+qwen-local                                         gravity           1                  0.700                  0.096
+qwen-local                                         hubble            1                  0.200                  4.437
+qwen-local                                         oscillator        1                  0.100                  0.104
+qwen-local                                         yukawa            1                  0.100           13179087.298
+--------------------------------------------------------------------------------------------------------------------
+expl_score: explanation judge score in [0, 1], higher is better. Arithmetic mean.
+norm_MSE: geometric mean of mean_pos_error / Var(GT_world) across seeds (values < 1e-14 dropped); lower is better. Per-world variances are hardcoded in run_benchmark.py.
+Format: point estimate [2.5%, 97.5%] from 5000 bootstrap resamples (seed=0). n=1 → no CI. 'n/a' = no successful runs.

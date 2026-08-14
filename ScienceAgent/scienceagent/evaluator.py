@@ -1888,7 +1888,7 @@ class ExplanationJudge:
     def __init__(
         self,
         judge_model: str = "claude-opus-4-6",
-        max_tokens: int = 1024,
+        max_tokens: int = 16384,
     ):
         self.judge_model = judge_model
         self.max_tokens = max_tokens

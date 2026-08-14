@@ -1,0 +1,68 @@
+World : fractional
+Engine: nbody
+Model : qwen-local
+Noise : Gaussian σ=0.17939 on positions, seed=0
+
+Trajectory CSV: /scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/results/trajectories/fractional.csv  (run_id=20260813T172555_qwen-local)  [auto-removed on exit]
+
+============================================================
+Discovered law:
+============================================================
+def discovered_law(pos1, pos2, p1, p2, velocity2, duration, **params):
+    """
+    Particle 2 experiences two forces from particle 1 at the origin:
+    (1) An attractive central force scaling as p1/r^n with n≈0.5.
+    (2) A velocity-dependent transverse (Lorentz-like) force proportional to B*v_perp.
+    The probe's property p2 does not significantly affect the dynamics in the tested range.
+    """
+    from scipy.integrate import solve_ivp
+    import numpy as np
+    G = params.get("G", 1.0)
+    n = params.get("n", 0.5)
+    B = params.get("B", 4.0)
+    y0 = [pos2[0], pos2[1], velocity2[0], velocity2[1]]
+    def rhs(t, y):
+        x, y, vx, vy = y
+        r = np.sqrt(x**2 + y**2)
+        if r < 1e-10:
+            r = 1e-10
+        fr = -G * p1 / (r**n)
+        fx = fr * x / r + B * vy
+        fy = fr * y / r - B * vx
+        return [vx, vy, fx, fy]
+    sol = solve_ivp(rhs, (0.0, duration), y0, method="RK45", rtol=1e-4, atol=1e-6)
+    final_pos2 = [sol.y[0, -1], sol.y[1, -1]]
+    final_vel2 = [sol.y[2, -1], sol.y[3, -1]]
+    return final_pos2, final_vel2
+
+def fit_parameters():
+    return {
+        "G": {"init": 1.0, "bounds": [0.1, 10.0]},
+        "n": {"init": 0.5, "bounds": [0.1, 2.0]},
+        "B": {"init": 4.0, "bounds": [1.0, 10.0]},
+    }
+
+============================================================
+Evaluation:
+============================================================
+  [fit using 4/28 training trajectories (cap: 4 traj × 5 times)]
+  Fitted parameters: G=0.4367, n=0.1, B=3.873
+  Training-set loss: 0.4884 → 0.4789
+  Case 1: mean_particle_mse = 5.6939
+  Case 2: mean_particle_mse = 1.3563
+  Case 3: mean_particle_mse = 6.9823
+
+  Mean particle MSE: 4.6775
+  Max  particle MSE: 18.5399
+  Result: FAIL
+
+============================================================
+Explanation evaluation:
+============================================================
+Agent explanation: The system consists of particle 1 fixed at the origin generating a central attractive field, and particle 2 moving under that field plus a uniform transverse (Lorentz-like) force. The central force scales as p1/r^n with n approximately 0.5 (softer than inverse-square gravity), pulling the probe toward the source. Superimposed is a velocity-dependent force perpendicular to the velocity (proportional to B), which causes orbital precession and spiral-like trajectories. Together these produce bounded but non-circular orbits with characteristic precessional motion.
+
+  Explanation score: 0.50  (raw 5.0/10)
+  Judge reasoning: The student correctly identifies the static nature of the field and approximates the force scaling as a power law, but treats it as an ordinary central potential rather than recognizing the fractional or non-local operator. The description also hallucinates an additional transverse, velocity-dependent force and omits particle 2's inertial role (p2), aligning with the 4–6 band for recognizing static attraction while missing the fractional character.
+<score>5</score>
+
+Full run log written to /scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/results/yml_bench/qwen_local_run/qwen-local/fractional_seed0.json / .txt

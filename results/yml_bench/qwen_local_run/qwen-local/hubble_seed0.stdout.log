@@ -1,0 +1,92 @@
+/scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/ScienceAgent/scienceagent/mse_fitting.py:165: UserWarning: skipping experiment '20260813T175458_qwen-local__r1__e0': 234/260 (time, particle) cells contain NaN values in positions/velocities (likely stale rows from a prior buggy run).
+  experiments = load_trajectories(csv_path, run_id=run_id)
+/scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/ScienceAgent/scienceagent/mse_fitting.py:165: UserWarning: skipping experiment '20260813T175458_qwen-local__r2__e1': 208/234 (time, particle) cells contain NaN values in positions/velocities (likely stale rows from a prior buggy run).
+  experiments = load_trajectories(csv_path, run_id=run_id)
+/home/scai/phd/aiz258455/sys/miniconda3/envs/discoverphys/lib/python3.11/site-packages/scipy/optimize/_numdiff.py:686: RuntimeWarning: invalid value encountered in subtract
+  df = [f_eval - f0 for f_eval in f_evals]
+/scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/ScienceAgent/scienceagent/mse_fitting.py:165: UserWarning: skipping experiment '20260813T175458_qwen-local__r1__e0': 234/260 (time, particle) cells contain NaN values in positions/velocities (likely stale rows from a prior buggy run).
+  experiments = load_trajectories(csv_path, run_id=run_id)
+/scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/ScienceAgent/scienceagent/mse_fitting.py:165: UserWarning: skipping experiment '20260813T175458_qwen-local__r2__e1': 208/234 (time, particle) cells contain NaN values in positions/velocities (likely stale rows from a prior buggy run).
+  experiments = load_trajectories(csv_path, run_id=run_id)
+/scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/ScienceAgent/scienceagent/mse_fitting.py:165: UserWarning: skipping experiment '20260813T175458_qwen-local__r5__e1': 130/156 (time, particle) cells contain NaN values in positions/velocities (likely stale rows from a prior buggy run).
+  experiments = load_trajectories(csv_path, run_id=run_id)
+World : hubble
+Engine: nbody
+Model : qwen-local
+Noise : Gaussian σ=0.48134 on positions, seed=0
+
+Trajectory CSV: /scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/results/trajectories/hubble.csv  (run_id=20260813T175458_qwen-local)  [auto-removed on exit]
+  [fit time budget 180s exceeded; using best-so-far params (loss=inf)]
+
+============================================================
+Discovered law:
+============================================================
+from scipy.integrate import solve_ivp
+import numpy as np
+
+def discovered_law(positions, velocities, masses, duration, **params):
+    """
+    Newtonian gravitational N-body system in 2D.
+    All particles interact via inverse-square gravity.
+    The massive anchor dominates the central potential, with orbiters and probes all feeling mutual gravitational attraction.
+    """
+    G = params.get("G", 3.3e-14)
+    N = len(positions)
+    masses_arr = np.array(masses, dtype=np.float64)
+    
+    def rhs(t, y):
+        pos = y[:2*N].reshape(N, 2)
+        vel = y[2*N:].reshape(N, 2)
+        acc = np.zeros((N, 2))
+        
+        for i in range(N):
+            for j in range(N):
+                if i == j:
+                    continue
+                r_vec = pos[i] - pos[j]
+                r_sq = r_vec[0]**2 + r_vec[1]**2
+                r = np.sqrt(r_sq)
+                if r < 1e-10:
+                    continue
+                acc[i] += G * masses_arr[j] * r_vec / (r_sq * r)
+        
+        return np.concatenate([vel.flatten(), acc.flatten()])
+    
+    y0 = np.concatenate([np.array(positions, dtype=np.float64).flatten(), 
+                         np.array(velocities, dtype=np.float64).flatten()])
+    sol = solve_ivp(rhs, (0.0, duration), y0, method="RK45", rtol=1e-6, atol=1e-8, 
+                    max_step=duration*0.1)
+    final_pos = sol.y[:2*N, -1].reshape(N, 2).tolist()
+    return final_pos
+
+def fit_parameters():
+    return {
+        "G": {"init": 3.3e-14, "bounds": [1e-15, 1e-12]},
+    }
+
+============================================================
+Evaluation:
+============================================================
+  [fit using 4/10 training trajectories (cap: 4 traj × 5 times)]
+  [fit time budget 180s exceeded; using best-so-far params (loss=inf)]
+  [fit hit 180s wall-clock budget; using best-so-far parameters]
+  Fitted parameters: G=3.3e-14
+  Training-set loss: nan → nan
+  Case 1: mean_probe_mse = 224.7262
+  Case 2: mean_probe_mse = 140.8227
+
+  Mean probe MSE (probes only): 182.7744
+  Max  probe MSE:               1939.3225
+  Result: FAIL
+
+============================================================
+Explanation evaluation:
+============================================================
+Agent explanation: The universe follows Newtonian gravitation where every particle attracts every other particle with a force proportional to the product of their masses and inversely proportional to the square of their separation. The massive anchor particle at the center creates a dominant gravitational well that confines the orbiters to approximately circular paths at radius 5. Probes respond to the combined gravitational field of all 25 other particles, with trajectories determined by the N-body gravitational interactions.
+
+  Explanation score: 0.20  (raw 2.0/10)
+  Judge reasoning: The student incorrectly models the system as a standard 3D Newtonian N-body simulation with pairwise inverse-square forces, completely missing the governing static 2D Laplacian field, the zero-source test-particle nature of the orbiters and probes, and the essential linear Hubble-flow body force that drives unbinding at large radii. This fundamental misidentification of the interaction law and governing operator places the description in the lowest non-zero scoring band.
+
+<score>2</score>
+
+Full run log written to /scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/results/yml_bench/qwen_local_run/qwen-local/hubble_seed0.json / .txt

@@ -1,0 +1,33 @@
+World : circle
+Engine: nbody
+Model : qwen-local
+Noise : Gaussian σ=0.19262 on positions, seed=0
+
+Trajectory CSV: /scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/results/trajectories/circle.csv  (run_id=20260813T183535_qwen-local)  [auto-removed on exit]
+Traceback (most recent call last):
+  File "/scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/ScienceAgent/run_discovery.py", line 1433, in <module>
+    main()
+  File "/scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/ScienceAgent/run_discovery.py", line 266, in main
+    law_source = agent.run()
+                 ^^^^^^^^^^^
+  File "/scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/ScienceAgent/scienceagent/agent.py", line 257, in run
+    reply = llm_client.complete(
+            ^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/ScienceAgent/scienceagent/llm_client.py", line 73, in complete
+    return _openai_complete(model, messages, system, max_tokens)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/ScienceAgent/scienceagent/llm_client.py", line 265, in _openai_complete
+    response = client.chat.completions.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/scai/phd/aiz258455/sys/miniconda3/envs/discoverphys/lib/python3.11/site-packages/openai/_utils/_utils.py", line 298, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/scai/phd/aiz258455/sys/miniconda3/envs/discoverphys/lib/python3.11/site-packages/openai/resources/chat/completions/completions.py", line 1296, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/home/scai/phd/aiz258455/sys/miniconda3/envs/discoverphys/lib/python3.11/site-packages/openai/_base_client.py", line 1382, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/scai/phd/aiz258455/sys/miniconda3/envs/discoverphys/lib/python3.11/site-packages/openai/_base_client.py", line 1155, in request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': "This model's maximum context length is 65536 tokens. However, you requested 12000 output tokens and your prompt contains at least 53537 input tokens, for a total of at least 65537 tokens. Please reduce the length of the input prompt or the number of requested output tokens. (parameter=input_tokens, value=53537)", 'type': 'BadRequestError', 'param': 'input_tokens', 'code': 400}}
