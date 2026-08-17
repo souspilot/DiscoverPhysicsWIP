@@ -1,0 +1,68 @@
+World : gravity
+Engine: nbody
+Model : qwen-local
+Noise : Gaussian σ=0.155216 on positions, seed=0
+
+Trajectory CSV: /scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/results/trajectories/gravity.csv  (run_id=20260814T221036_qwen-local)  [auto-removed on exit]
+
+============================================================
+Discovered law:
+============================================================
+def discovered_law(pos1, pos2, p1, p2, velocity2, duration, **params):
+    """Particle 2 feels an attractive central force toward the fixed origin.
+    The acceleration is directed along -r_hat with magnitude K * p1**a1 * p2**a2 / r**n,
+    an inverse-power pull whose radial exponent n and strength K are fitted to data."""
+    from scipy.integrate import solve_ivp
+    import numpy as np
+    import math
+    G  = params.get("G", 1.0)
+    n  = params.get("n", 2.0)
+    a1 = params.get("a1", 1.0)
+    a2 = params.get("a2", 1.0)
+    def rhs(t, y):
+        x, v0, v1 = y[0], y[1], y[2]
+        r = math.hypot(x[0], x[1])
+        if r < 1e-6:
+            ax = ay = 0.0
+        else:
+            mag = G * (p1 ** a1) * (p2 ** a2) / (r ** n)
+            ax = -mag * x[0] / r
+            ay = -mag * x[1] / r
+        return [x[0], x[1], v0, v1, ax, ay]
+    y0 = [pos2[0], pos2[1], velocity2[0], velocity2[1], 0.0, 0.0]
+    sol = solve_ivp(rhs, (0.0, duration), y0, method="RK45", rtol=1e-4, atol=1e-4)
+    f = sol.y[:, -1]
+    return (f[0], f[1]), (f[3], f[4])
+def fit_parameters():
+    return {
+        "G":  {"init": 1.0, "bounds": [0.01, 10.0]},
+        "n":  {"init": 2.0, "bounds": [0.5, 3.0]},
+        "a1": {"init": 1.0, "bounds": [0.0, 3.0]},
+        "a2": {"init": 1.0, "bounds": [0.0, 3.0]},
+    }
+
+============================================================
+Evaluation:
+============================================================
+  [fit using 4/34 training trajectories (cap: 4 traj × 5 times)]
+  Fitted parameters: G=1, n=2, a1=1, a2=1
+  Training-set loss: inf → inf
+  Case 1: ERROR — invalid index to scalar variable.
+  Case 2: ERROR — invalid index to scalar variable.
+  Case 3: ERROR — invalid index to scalar variable.
+
+  Mean particle MSE: inf
+  Max  particle MSE: inf
+  Result: FAIL
+
+============================================================
+Explanation evaluation:
+============================================================
+Agent explanation: Particle 2 experiences an attractive central force pulling it radially toward the fixed source particle at the origin, with the transverse component of the force vanishing (a purely radial field). The force magnitude follows an inverse power of the separation, r^{-n}, scaled by a coupling that depends on the source strength p1 and probe strength p2 through fitted exponents. The particle obeys Newton's second law with this radial acceleration, producing infall and oscillatory passage through the origin whose timescale lengthens with initial distance.
+
+  Explanation score: 0.70  (raw 7.0/10)
+  Judge reasoning: The student captures a static, purely radial attractive force and Newtonian acceleration, but does not identify the 2D Poisson/Laplacian field or the characteristic 1/r (logarithmic Green’s function) falloff. It also leaves the power-law decay unspecified and treats p2 as a probe coupling rather than the particle’s inertia. This fits the middle band of static attraction with qualitative operator/force description and muddled coupling roles.
+
+<score>7</score>
+
+Full run log written to /scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/results/yml_bench/qwen38_run/qwen-local/gravity_seed0.json / .txt

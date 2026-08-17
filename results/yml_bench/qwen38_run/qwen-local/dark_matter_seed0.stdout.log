@@ -1,0 +1,8 @@
+World : dark_matter
+Engine: nbody
+Model : qwen-local
+Noise : Gaussian σ=0.596724 on positions, seed=0
+
+Trajectory CSV: /scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/results/trajectories/dark_matter.csv  (run_id=20260815T031722_qwen-local)  [auto-removed on exit]
+
+[No final law submitted]

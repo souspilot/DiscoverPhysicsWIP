@@ -1,0 +1,57 @@
+==========================================
+YAML benchmark: qwen38_run
+  output : /scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/results/yml_bench/qwen38_run
+  models : qwen-local
+  worlds : gravity yukawa fractional dark_matter three_species ether hubble coulomb_easy extra_dimensions circle oscillator
+  seeds  : 0
+  critic : off (model: qwen-local)
+  judge  : qwen-local
+  rounds : 8
+  noise  : σ/σ_signal (frac of per-world sqrt(Var GT)) = 0.075
+  random : off
+  no_mse : off
+  total trials : 11
+==========================================
+[  1/ 11] model=qwen-local world=gravity noise=0.075 (σ=0.155216) seed=0
+    done in 6115s
+[  2/ 11] model=qwen-local world=yukawa noise=0.075 (σ=0.178698) seed=0
+    done in 5401s
+[  3/ 11] model=qwen-local world=fractional noise=0.075 (σ=0.179390) seed=0
+    done in 6848s
+[  4/ 11] model=qwen-local world=dark_matter noise=0.075 (σ=0.596724) seed=0
+    done in 6923s
+[  5/ 11] model=qwen-local world=three_species noise=0.075 (σ=0.401912) seed=0
+    done in 7013s
+[  6/ 11] model=qwen-local world=ether noise=0.075 (σ=0.345806) seed=0
+    done in 7462s
+[  7/ 11] model=qwen-local world=hubble noise=0.075 (σ=0.481340) seed=0
+    done in 7150s
+[  8/ 11] model=qwen-local world=coulomb_easy noise=0.075 (σ=0.154507) seed=0
+    done in 6189s
+[  9/ 11] model=qwen-local world=extra_dimensions noise=0.075 (σ=0.154580) seed=0
+    done in 5818s
+[ 10/ 11] model=qwen-local world=circle noise=0.075 (σ=0.192620) seed=0
+    done in 6924s
+[ 11/ 11] model=qwen-local world=oscillator noise=0.075 (σ=0.188726) seed=0
+    done in 6775s
+==========================================
+Finished 11 trials in 72618s
+==========================================
+Wrote /scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/results/yml_bench/qwen38_run/run.sh
+Executing /scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/results/yml_bench/qwen38_run/run.sh ...
+
+
+summary written to /scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/results/yml_bench/qwen38_run/summary.txt
+--- summary.txt ---
+Benchmark summary  (qwen38_run)
+====================================================================================================================
+model                                              world             n    expl_score [95% CI]      norm_MSE [95% CI]
+--------------------------------------------------------------------------------------------------------------------
+qwen-local                                         extra_dimensions   1                  0.200                  9.435
+qwen-local                                         gravity           1                  0.700                    n/a
+qwen-local                                         yukawa            1                  0.400                  0.002
+--------------------------------------------------------------------------------------------------------------------
+expl_score: explanation judge score in [0, 1], higher is better. Arithmetic mean.
+norm_MSE: geometric mean of mean_pos_error / Var(GT_world) across seeds (values < 1e-14 dropped); lower is better. Per-world variances are hardcoded in run_benchmark.py.
+Format: point estimate [2.5%, 97.5%] from 5000 bootstrap resamples (seed=0). n=1 → no CI. 'n/a' = no successful runs.
+

@@ -1,0 +1,23 @@
+name: qwen38_run
+models:
+  - qwen-local
+critic: off
+critic_model: qwen-local
+judge_model: qwen-local
+max_rounds: 8
+noise_frac: 0.075
+random_experiments: off
+no_mse: off
+worlds:
+  - gravity
+  - yukawa
+  - fractional
+  - dark_matter
+  - three_species
+  - ether
+  - hubble
+  - coulomb_easy
+  - extra_dimensions
+  - circle
+  - oscillator
+seeds: [0]

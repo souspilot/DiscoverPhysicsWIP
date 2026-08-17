@@ -1,0 +1,10 @@
+Per-model summary  (qwen38_run)
+============================================================================================================================
+model                                               n_trials     passed    expl_score [95% CI]          norm_MSE [95% CI]
+----------------------------------------------------------------------------------------------------------------------------
+qwen-local                                                 3        0/3   0.433 [0.200, 0.700]       0.146 [0.002, 9.435]
+----------------------------------------------------------------------------------------------------------------------------
+Pooled across all worlds and seeds (every trial counts equally).
+passed: number of trials (summed over worlds & seeds) with mean_pos_error / Var(GT_world) < 0.1 AND explanation_score >= 0.75. Per-world variances are hardcoded in run_benchmark.py.
+norm_MSE: geometric mean of mean_pos_error / Var(GT_world) (values < 1e-14 dropped); lower is better.
+Format: point estimate [2.5%, 97.5%] from 5000 bootstrap resamples (seed=0). n=1 → no CI. 'n/a' = no successful runs.

@@ -1,0 +1,11 @@
+/home/scai/phd/aiz258455/sys/miniconda3/envs/discoverphys/lib/python3.11/site-packages/scipy/optimize/_numdiff.py:686: RuntimeWarning: invalid value encountered in subtract
+  df = [f_eval - f0 for f_eval in f_evals]
+World : three_species
+Engine: nbody
+Model : qwen-local
+Noise : Gaussian σ=0.401912 on positions, seed=0
+
+Trajectory CSV: /scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/results/trajectories/three_species.csv  (run_id=20260815T051242_qwen-local)  [auto-removed on exit]
+  [fit time budget 180s exceeded; using best-so-far params (loss=inf)]
+
+[No final law submitted]

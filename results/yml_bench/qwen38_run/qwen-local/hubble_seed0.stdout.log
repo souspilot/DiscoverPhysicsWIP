@@ -1,0 +1,8 @@
+World : hubble
+Engine: nbody
+Model : qwen-local
+Noise : Gaussian σ=0.48134 on positions, seed=0
+
+Trajectory CSV: /scratch/scai/phd/aiz258455/DiscoverPhysicsWIP/results/trajectories/hubble.csv  (run_id=20260815T091402_qwen-local)  [auto-removed on exit]
+
+[No final law submitted]
