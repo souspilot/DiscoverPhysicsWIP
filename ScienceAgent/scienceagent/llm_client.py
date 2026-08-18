@@ -39,6 +39,7 @@ def complete(
     messages: list[dict],
     system: Optional[str] = None,
     max_tokens: int = 4096,
+    reasoning_effort: Optional[str] = None,
 ) -> str:
     """
     Send a chat completion request and return the assistant message text.
@@ -50,6 +51,8 @@ def complete(
         system: System prompt string (handled natively by Anthropic; prepended
             as a system message for OpenAI-compatible providers).
         max_tokens: Maximum tokens in the response.
+        reasoning_effort: Optional reasoning effort for Qwen3.8 models.
+            One of "low", "medium", "high", or None (model default).
 
     Returns:
         The assistant's reply as a plain string.
@@ -70,7 +73,7 @@ def complete(
     elif model.startswith("azure/"):
         return _azure_complete(model[len("azure/") :], messages, system, max_tokens)
     else:
-        return _openai_complete(model, messages, system, max_tokens)
+        return _openai_complete(model, messages, system, max_tokens, reasoning_effort)
 
 
 def _is_anthropic(model: str) -> bool:
@@ -240,7 +243,7 @@ def _resolve_openai_provider(model: str) -> tuple[str, Optional[str], Optional[s
     return model, base_url, api_key
 
 
-def _openai_complete(model, messages, system, max_tokens):
+def _openai_complete(model, messages, system, max_tokens, reasoning_effort=None):
     try:
         from openai import OpenAI
     except ImportError:
@@ -262,10 +265,19 @@ def _openai_complete(model, messages, system, max_tokens):
         full_messages.append({"role": "system", "content": system})
     full_messages.extend(messages)
 
-    response = client.chat.completions.create(
+    create_kwargs = dict(
         model=resolved_model,
         messages=full_messages,
         max_tokens=max_tokens,
     )
+
+    # Qwen3.8 reasoning_effort: "low", "medium", "high" (default).
+    # Passed via extra_body for vLLM OpenAI-compatible endpoints.
+    if reasoning_effort is not None:
+        create_kwargs["extra_body"] = {
+            "reasoning_effort": reasoning_effort,
+        }
+
+    response = client.chat.completions.create(**create_kwargs)
     msg = response.choices[0].message
     return msg.content or getattr(msg, "reasoning_content", None) or ""
