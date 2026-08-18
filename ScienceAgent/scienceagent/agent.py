@@ -159,6 +159,7 @@ class DiscoveryAgent:
         random_generator: Optional[Callable[[], dict]] = None,
         trajectory_logger=None,
         no_mse: bool = False,
+        reasoning_effort: str = "low",  # "low" | "medium" | "high"
     ):
         self.model = model
         self.executor = executor
@@ -177,6 +178,7 @@ class DiscoveryAgent:
         self.random_generator = random_generator
         self.trajectory_logger = trajectory_logger
         self.no_mse = bool(no_mse)
+        self.reasoning_effort = reasoning_effort
         if self.random_experiments and self.random_generator is None:
             raise ValueError(
                 "random_experiments=True requires a random_generator callable."
