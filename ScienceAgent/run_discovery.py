@@ -126,6 +126,11 @@ def main():
         "End-of-mission fitting via fit_parameters() in <final_law> "
         "still runs as usual. Uses PhysicsSchool/prompts/_template_no_mse.md.",
     )
+    parser.add_argument(
+        "--reasoning-effort", choices=("low", "medium", "high"),
+        default="low",
+        help="Reasoning effort for Qwen3.8 models: low/medium/high.",
+    )
     args = parser.parse_args()
 
     if args.no_mse and args.random_experiments:
@@ -258,6 +263,7 @@ def main():
         random_generator=random_generator,
         trajectory_logger=trajectory_logger,
         no_mse=args.no_mse,
+        reasoning_effort=args.reasoning_effort,
     )
     if args.max_rounds is not None:
         agent_kwargs["max_rounds"] = args.max_rounds

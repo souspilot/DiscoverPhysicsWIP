@@ -259,6 +259,7 @@ class DiscoveryAgent:
                 messages=messages,
                 system=self._system,
                 max_tokens=self.max_tokens,
+                reasoning_effort=self.reasoning_effort,
             )
             round_entry["llm_reply"] = reply
 
@@ -294,6 +295,7 @@ class DiscoveryAgent:
                             messages=messages,
                             system=self._system,
                             max_tokens=self.max_tokens,
+                            reasoning_effort=self.reasoning_effort,
                         )
                         messages.append(
                             {"role": "assistant", "content": followup_reply}
