@@ -1,11 +1,11 @@
-name: qwen38_run
+name: qwen38_low_nocritic_norandom_nomse
 models:
   - qwen-local
 critic: off
 critic_model: qwen-local
 judge_model: qwen-local
-max_rounds: 8
-noise_frac: 0.075
+max_rounds: 16
+noise_frac: [0.0, 0.05, 0.1]
 random_experiments: off
 no_mse: off
 worlds:
@@ -20,4 +20,4 @@ worlds:
   - extra_dimensions
   - circle
   - oscillator
-seeds: [0]
+seeds: [0,1,2,3,4]
